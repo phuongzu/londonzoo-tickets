@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>London Zoo - Book Tickets Online</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2e7d32;
+            --primary-dark: #1b5e20;
+            --secondary-color: #81c784;
+            --accent-color: #ff8f00;
+            --accent-dark: #e65100;
+            --text-color: #333;
+            --light-bg: #f5f5f5;
+            --gray: #757575;
+            --light-gray: #e0e0e0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        header {
+            background-color: white;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .logo img {
+            height: 40px;
+        }
+        
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .logo-text span {
+            color: var(--accent-color);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 1.5rem;
+            position: relative;
+        }
+        
+        nav ul li a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        
+        nav ul li a:hover {
+            color: var(--primary-color);
+        }
+        
+        nav ul li a.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .hero {
+            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1552410260-0fd9b577afa6?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            padding: 2rem;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .ticket-section {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        
+        .section-title i {
+            color: var(--accent-color);
+        }
+        
+        .section-subtitle {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .ticket-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .ticket-card {
+            border: 1px solid var(--light-gray);
+            border-radius: 10px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ticket-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-color: var(--secondary-color);
+        }
+        
+        .ticket-card.popular::before {
+            content: "MOST POPULAR";
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--accent-color);
+            color: white;
+            padding: 0.3rem 1rem;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border-bottom-left-radius: 10px;
+        }
+        
+        .ticket-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .ticket-card .ticket-desc {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+            min-height: 60px;
+        }
+        
+        .ticket-price {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin: 1.5rem 0;
+        }
+        
+        .ticket-price small {
+            font-size: 1rem;
+            color: var(--gray);
+            font-weight: normal;
+        }
+        
+        .ticket-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+        
+        .ticket-features li {
+            margin-bottom: 0.8rem;
+            position: relative;
+            padding-left: 2rem;
+        }
+        
+        .ticket-features li:before {
+            content: "\f00c";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            color: var(--primary-color);
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        
+        .ticket-features li.disabled {
+            color: var(--light-gray);
+        }
+        
+        .ticket-features li.disabled:before {
+            content: "\f00d";
+            color: var(--light-gray);
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-accent {
+            background-color: var(--accent-color);
+        }
+        
+        .btn-accent:hover {
+            background-color: var(--accent-dark);
+        }
+        
+        .booking-form {
+            margin-top: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.2);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .summary {
+            background-color: var(--light-bg);
+            padding: 2rem;
+            border-radius: 10px;
+            margin-top: 2rem;
+        }
+        
+        .summary-title {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px dashed var(--light-gray);
+        }
+        
+        .summary-total {
+            font-weight: bold;
+            font-size: 1.3rem;
+            border-top: 2px solid var(--light-gray);
+            padding-top: 1.5rem;
+            margin-top: 1rem;
+        }
+        
+        .sidebar {
+            position: sticky;
+            top: 100px;
+            align-self: start;
+        }
+        
+        .info-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .info-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        
+        .info-item {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .info-item i {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+            margin-top: 0.2rem;
+        }
+        
+        .info-content h4 {
+            margin-bottom: 0.3rem;
+            color: var(--text-color);
+        }
+        
+        .info-content p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .opening-hours {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        .opening-hours tr {
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .opening-hours tr:last-child {
+            border-bottom: none;
+        }
+        
+        .opening-hours td {
+            padding: 0.8rem 0;
+        }
+        
+        .opening-hours td:last-child {
+            text-align: right;
+            font-weight: 500;
+        }
+        
+        .alert {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .alert-info {
+            background-color: #e3f2fd;
+            color: #0d47a1;
+        }
+        
+        .alert-warning {
+            background-color: #fff8e1;
+            color: #ff6f00;
+        }
+        
+        .alert i {
+            font-size: 1.5rem;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            padding: 2rem;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+        
+        .modal-title {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+        
+        footer {
+            background-color: var(--primary-dark);
+            color: white;
+            padding: 3rem 0 1.5rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--accent-color);
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section ul li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-section ul li a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .footer-section ul li a:hover {
+            color: var(--accent-color);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .social-links a {
+            color: white;
+            background-color: rgba(255,255,255,0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .social-links a:hover {
+            background-color: var(--accent-color);
+            transform: translateY(-3px);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.7);
+        }
+        
+        @media (max-width: 992px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                position: static;
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 2rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                margin-top: 1.5rem;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            nav ul li {
+                margin: 0 0.8rem 0.8rem;
+            }
+            
+            .hero {
+                height: 300px;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .ticket-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <img src="https://www.zsl.org/sites/default/files/styles/width_600/public/ZSL_Logo_0.png?itok=0T1m5h1Y" alt="London Zoo Logo">
+                    <div class="logo-text">London <span>Zoo</span></div>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
+                        <li><a href="#"><i class="fas fa-paw"></i> Animals</a></li>
+                        <li><a href="#"><i class="fas fa-calendar-alt"></i> Events</a></li>
+                        <li><a href="#"><i class="fas fa-map-marked-alt"></i> Visit</a></li>
+                        <li><a href="#" class="active"><i class="fas fa-ticket-alt"></i> Tickets</a></li>
+                        <li><a href="#"><i class="fas fa-info-circle"></i> Info</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+    
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Book Your Zoo Adventure Today</h1>
+            <p>Skip the queues and save up to 15% when you book online</p>
+        </div>
+    </section>
+    
+    <div class="container">
+        <div class="main-content">
+            <div class="primary-content">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    <div>
+                        <strong>COVID-19 Update:</strong> We're open with enhanced safety measures. Face coverings are recommended in indoor areas. 
+                        <a href="#" id="covidInfo" style="color: inherit; text-decoration: underline;">Learn more</a>
+                    </div>
+                </div>
+                
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>
+                        <strong>Peak Season Alert:</strong> Weekends and school holidays get very busy. We recommend arriving early or booking our Early Entry tickets.
+                    </div>
+                </div>
+                
+                <section class="ticket-section">
+                    <h2 class="section-title"><i class="fas fa-ticket-alt"></i> Choose Your Ticket</h2>
+                    <p class="section-subtitle">All tickets include access to all animal exhibits, daily talks, and feeding demonstrations</p>
+                    
+                    <div class="ticket-options">
+                        <div class="ticket-card">
+                            <h3>Standard Day Ticket</h3>
+                            <p class="ticket-desc">Perfect for individuals and couples looking for a fun day out with the animals</p>
+                            <div class="ticket-price">£32.00 <small>per adult</small></div>
+                            <ul class="ticket-features">
+                                <li>Full access to all exhibits</li>
+                                <li>Daily animal talks and feeds</li>
+                                <li>10% discount in zoo shops</li>
+                                <li>Free zoo map</li>
+                                <li>Children (3-15): £22.40</li>
+                                <li class="disabled">Priority entry</li>
+                            </ul>
+                            <button class="btn" onclick="selectTicket('standard')">Select Ticket</button>
+                        </div>
+                        
+                        <div class="ticket-card popular">
+                            <h3>Family Ticket</h3>
+                            <p class="ticket-desc">Best value for families - save up to 20% compared to individual tickets</p>
+                            <div class="ticket-price">£89.00 <small>for 2 adults + 2 children</small></div>
+                            <ul class="ticket-features">
+                                <li>Admits 2 adults and 2 children</li>
+                                <li>Additional children at £18 each</li>
+                                <li>15% discount in zoo shops</li>
+                                <li>Free animal spotting guide</li>
+                                <li>Free car parking voucher</li>
+                                <li class="disabled">Priority entry</li>
+                            </ul>
+                            <button class="btn btn-accent" onclick="selectTicket('family')">Select Ticket</button>
+                        </div>
+                        
+                        <div class="ticket-card">
+                            <h3>Annual Membership</h3>
+                            <p class="ticket-desc">Unlimited visits for 12 months with exclusive member benefits</p>
+                            <div class="ticket-price">£79.00 <small>per adult</small></div>
+                            <ul class="ticket-features">
+                                <li>Unlimited entry for 1 year</li>
+                                <li>Exclusive member events</li>
+                                <li>20% discount in zoo shops</li>
+                                <li>2 free guest passes per year</li>
+                                <li>Priority booking for events</li>
+                                <li>Free quarterly zoo magazine</li>
+                            </ul>
+                            <button class="btn" onclick="selectTicket('annual')">Select Ticket</button>
+                        </div>
+                    </div>
+                    
+                    <div class="booking-form" id="bookingForm" style="display: none;">
+                        <h2 class="section-title"><i class="fas fa-calendar-check"></i> Your Booking Details</h2>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="visitDate"><i class="far fa-calendar-alt"></i> Visit Date</label>
+                                <input type="date" id="visitDate" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ticketType"><i class="fas fa-ticket-alt"></i> Ticket Type</label>
+                                <input type="text" id="ticketType" class="form-control" readonly>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="adults"><i class="fas fa-male"></i> Adults (16+)</label>
+                                <select id="adults" class="form-control" onchange="calculateTotal()">
+                                    <option value="0">0</option>
+                                    <option value="1" selected>1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="children"><i class="fas fa-child"></i> Children (3-15)</label>
+                                <select id="children" class="form-control" onchange="calculateTotal()">
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2" selected>2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="entryTime"><i class="far fa-clock"></i> Preferred Entry Time</label>
+                            <select id="entryTime" class="form-control">
+                                <option value="any">Any Time</option>
+                                <option value="morning">Morning (10:00-12:00)</option>
+                                <option value="afternoon">Afternoon (12:00-14:00)</option>
+                                <option value="late">Late Afternoon (14:00-16:00)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email"><i class="far fa-envelope"></i> Email Address</label>
+                            <input type="email" id="email" class="form-control" required placeholder="Your confirmation will be sent here">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="special"><i class="fas fa-star"></i> Special Requirements</label>
+                            <textarea id="special" class="form-control" rows="3" placeholder="Accessibility needs, dietary requirements, etc."></textarea>
+                        </div>
+                        
+                        <div class="summary">
+                            <h3 class="summary-title"><i class="fas fa-receipt"></i> Order Summary</h3>
+                            <div class="summary-item">
+                                <span>Tickets</span>
+                                <span id="ticketSummary">0</span>
+                            </div>
+                            <div class="summary-item">
+                                <span>Subtotal</span>
+                                <span id="subtotal">£0.00</span>
+                            </div>
+                            <div class="summary-item">
+                                <span>Online Discount</span>
+                                <span id="discount">-£0.00</span>
+                            </div>
+                            <div class="summary-item">
+                                <span>Booking Fee</span>
+                                <span>£1.50</span>
+                            </div>
+                            <div class="summary-item">
+                                <span>Suggested Donation</span>
+                                <span>£2.00</span>
+                            </div>
+                            <div class="summary-item summary-total">
+                                <span>Total to Pay</span>
+                                <span id="total">£3.50</span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group" style="margin-top: 1.5rem;">
+                            <input type="checkbox" id="terms" required>
+                            <label for="terms">I agree to the <a href="#" id="termsLink">Terms & Conditions</a> and understand my tickets are non-refundable</label>
+                        </div>
+                        
+                        <div class="form-group" style="margin-top: 1.5rem;">
+                            <input type="checkbox" id="newsletter" checked>
+                            <label for="newsletter">Send me zoo news and special offers (you can unsubscribe anytime)</label>
+                        </div>
+                        
+                        <button class="btn btn-accent" style="margin-top: 1.5rem;" onclick="submitBooking()">
+                            <i class="fas fa-lock"></i> Secure Checkout
+                        </button>
+                    </div>
+                </section>
+                
+                <section class="ticket-section">
+                    <h2 class="section-title"><i class="fas fa-gift"></i> Add Experiences</h2>
+                    <p class="section-subtitle">Make your visit extra special with these unforgettable experiences</p>
+                    
+                    <div class="ticket-options">
+                        <div class="ticket-card">
+                            <h3>Penguin Feeding</h3>
+                            <p class="ticket-desc">Get up close with our playful penguins and help feed them</p>
+                            <div class="ticket-price">£12.00 <small>per person</small></div>
+                            <ul class="ticket-features">
+                                <li>15 minute experience</li>
+                                <li>Small group (max 6 people)</li>
+                                <li>Learn from our keepers</li>
+                                <li>Souvenir photo included</li>
+                                <li>Ages 6+ (children must be accompanied)</li>
+                            </ul>
+                            <button class="btn btn-outline" onclick="addExperience('penguin')">Add to Booking</button>
+                        </div>
+                        
+                        <div class="ticket-card">
+                            <h3>Giraffe Encounter</h3>
+                            <p class="ticket-desc">Meet our gentle giants and hand-feed them their favorite snacks</p>
+                            <div class="ticket-price">£15.00 <small>per person</small></div>
+                            <ul class="ticket-features">
+                                <li>20 minute experience</li>
+                                <li>Photo opportunity</li>
+                                <li>Educational talk</li>
+                                <li>Certificate of participation</li>
+                                <li>Ages 8+</li>
+                            </ul>
+                            <button class="btn btn-outline" onclick="addExperience('giraffe')">Add to Booking</button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <div class="sidebar">
+                <div class="info-card">
+                    <h3><i class="fas fa-info-circle"></i> Visitor Information</h3>
+                    <div class="info-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div class="info-content">
+                            <h4>Location</h4>
+                            <p>Regent's Park, London NW1 4RY</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-subway"></i>
+                        <div class="info-content">
+                            <h4>Nearest Tube</h4>
+                            <p>Camden Town (Northern line) - 10 min walk</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-car"></i>
+                        <div class="info-content">
+                            <h4>Parking</h4>
+                            <p>Pay-and-display available nearby (£4.50/hour)</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <h3><i class="far fa-clock"></i> Opening Hours</h3>
+                    <table class="opening-hours">
+                        <tr>
+                            <td>Monday - Friday</td>
+                            <td>10:00 - 17:30</td>
+                        </tr>
+                        <tr>
+                            <td>Saturday</td>
+                            <td>10:00 - 18:00</td>
+                        </tr>
+                        <tr>
+                            <td>Sunday</td>
+                            <td>10:00 - 18:00</td>
+                        </tr>
+                        <tr>
+                            <td>Bank Holidays</td>
+                            <td>10:00 - 18:00</td>
+                        </tr>
+                    </table>
+                    <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--gray);">Last entry 1 hour before closing</p>
+                </div>
+                
+                <div class="info-card">
+                    <h3><i class="fas fa-question-circle"></i> Need Help?</h3>
+                    <div class="info-item">
+                        <i class="fas fa-phone"></i>
+                        <div class="info-content">
+                            <h4>Call Us</h4>
+                            <p>020 7722 3333</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="far fa-envelope"></i>
+                        <div class="info-content">
+                            <h4>Email Us</h4>
+                            <p>tickets@londonzoo.org</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-comments"></i>
+                        <div class="info-content">
+                            <h4>Live Chat</h4>
+                            <p>Available 9:00-17:00</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>London Zoo</h3>
+                    <p>As the world's oldest scientific zoo, we've been at the forefront of zoology since 1828, housing over 20,000 animals across 36 acres.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Plan Your Visit</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Animals & Exhibits</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Daily Schedule</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Conservation Work</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Education Programs</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Support Us</h3>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Become a Member</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Adopt an Animal</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Make a Donation</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Corporate Sponsorship</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Volunteer</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Legal</h3>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Terms & Conditions</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Privacy Policy</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Accessibility</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Jobs & Careers</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Press Enquiries</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Zoological Society of London. Registered Charity in England & Wales No. 208728.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <div class="modal" id="termsModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('termsModal')">&times;</span>
+            <h3 class="modal-title">Terms & Conditions</h3>
+            <div style="height: 400px; overflow-y: auto; padding-right: 1rem;">
+                <h4>1. Ticket Purchase</h4>
+                <p>All tickets are non-refundable and non-transferable. Tickets are valid only for the date shown. We may be able to change your booking date if you contact us at least 48 hours before your visit date.</p>
+                
+                <h4>2. Entry Conditions</h4>
+                <p>The zoo reserves the right to refuse entry. All visitors must comply with our code of conduct. Children under 16 must be accompanied by an adult at all times.</p>
+                
+                <h4>3. Photography</h4>
+                <p>Photography is permitted for personal use only. Commercial photography requires prior permission. Drones are not permitted on site.</p>
+                
+                <h4>4. Safety</h4>
+                <p>Follow all safety instructions from staff. Do not feed the animals or cross safety barriers. Some areas may be closed for animal welfare reasons.</p>
+                
+                <h4>5. Weather</h4>
+                <p>The zoo is open in all weather conditions. Some animals may not be visible in extreme weather. Tickets are not refundable due to weather.</p>
+                
+                <h4>6. COVID-19</h4>
+                <p>We follow all government guidelines. You may be required to wear face coverings in indoor areas. Please do not visit if you have COVID-19 symptoms.</p>
+                
+                <h4>7. Data Protection</h4>
+                <p>We will use your personal data in accordance with our Privacy Policy. You may opt out of marketing communications at any time.</p>
+            </div>
+            <button class="btn" style="margin-top: 1rem;" onclick="closeModal('termsModal')">I Understand</button>
+        </div>
+    </div>
+    
+    <div class="modal" id="covidModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('covidModal')">&times;</span>
+            <h3 class="modal-title">COVID-19 Safety Measures</h3>
+            <div style="height: 400px; overflow-y: auto; padding-right: 1rem;">
+                <h4>Your Safety is Our Priority</h4>
+                <p>We've implemented enhanced cleaning and safety measures to protect our visitors, staff, and animals.</p>
+                
+                <h4>Before You Visit</h4>
+                <ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
+                    <li>Book online in advance to guarantee entry</li>
+                    <li>Do not visit if you or anyone in your household has COVID-19 symptoms</li>
+                    <li>Download our app for contactless maps and information</li>
+                </ul>
+                
+                <h4>During Your Visit</h4>
+                <ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
+                    <li>Face coverings are recommended in all indoor areas</li>
+                    <li>Use hand sanitizer stations located throughout the zoo</li>
+                    <li>Maintain social distancing where possible</li>
+                    <li>Follow one-way systems where indicated</li>
+                </ul>
+                
+                <h4>Enhanced Measures</h4>
+                <ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
+                    <li>Increased cleaning of high-touch areas</li>
+                    <li>Protective screens at service points</li>
+                    <li>Contactless payment preferred</li>
+                    <li>Reduced capacity in indoor exhibits</li>
+                </ul>
+                
+                <h4>Animal Welfare</h4>
+                <p>Some animals may not be on display if our veterinary team determines it's in their best interest. We appreciate your understanding.</p>
+            </div>
+            <button class="btn" style="margin-top: 1rem;" onclick="closeModal('covidModal')">I Understand</button>
+        </div>
+    </div>
+    
+    <script>
+        let selectedTicket = null;
+        const ticketPrices = {
+            standard: { adult: 32.00, child: 22.40 },
+            family: { base: 89.00, extraChild: 18.00 },
+            annual: { adult: 79.00 }
+        };
+        
+        // Set minimum date to today
+        window.onload = function() {
+            const today = new Date();
+            const dd = String(today.getDate()).padStart(2, '0');
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const yyyy = today.getFullYear();
+            document.getElementById('visitDate').min = `${yyyy}-${mm}-${dd}`;
+            
+            // Set default date to tomorrow
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const tomorrowStr = tomorrow.toISOString().split('T')[0];
+            document.getElementById('visitDate').value = tomorrowStr;
+            
+            // Add event listeners
+            document.getElementById('termsLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                openModal('termsModal');
+            });
+            
+            document.getElementById('covidInfo').addEventListener('click', function(e) {
+                e.preventDefault();
+                openModal('covidModal');
+            });
+        };
+        
+        function selectTicket(type) {
+            selectedTicket = type;
+            document.getElementById('bookingForm').style.display = 'block';
+            
+            let ticketName = '';
+            switch(type) {
+                case 'standard':
+                    ticketName = 'Standard Day Ticket';
+                    document.getElementById('adults').value = '1';
+                    document.getElementById('children').value = '0';
+                    break;
+                case 'family':
+                    ticketName = 'Family Ticket (2+2)';
+                    document.getElementById('adults').value = '2';
+                    document.getElementById('children').value = '2';
+                    break;
+                case 'annual':
+                    ticketName = 'Annual Membership';
+                    document.getElementById('adults').value = '1';
+                    document.getElementById('children').value = '0';
+                    break;
+            }
+            
+            document.getElementById('ticketType').value = ticketName;
+            
+            // Scroll to form
+            document.getElementById('bookingForm').scrollIntoView({ behavior: 'smooth' });
+            
+            calculateTotal();
+        }
+        
+        function calculateTotal() {
+            if (!selectedTicket) return;
+            
+            const adults = parseInt(document.getElementById('adults').value);
+            const children = parseInt(document.getElementById('children').value);
+            let subtotal = 0;
+            let discount = 0;
+            
+            if (selectedTicket === 'family') {
+                subtotal = ticketPrices.family.base;
+                // Add extra children at reduced rate
+                const extraChildren = Math.max(0, children - 2);
+                subtotal += extraChildren * ticketPrices.family.extraChild;
+                
+                // Calculate discount compared to standard tickets
+                const standardPrice = (2 * ticketPrices.standard.adult) + (2 * ticketPrices.standard.child);
+                discount = standardPrice - ticketPrices.family.base;
+            } else if (selectedTicket === 'annual') {
+                subtotal = adults * ticketPrices.annual.adult;
+                // Children can't have annual memberships
+            } else {
+                subtotal = adults * ticketPrices.standard.adult;
+                subtotal += children * ticketPrices.standard.child;
+                
+                // Online discount
+                if (adults + children >= 2) {
+                    discount = subtotal * 0.10; // 10% discount for 2+ tickets
+                    subtotal -= discount;
+                }
+            }
+            
+            const bookingFee = 1.50;
+            const donation = 2.00;
+            const total = subtotal + bookingFee + donation;
+            
+            // Update summary
+            let ticketSummary = '';
+            if (selectedTicket === 'family') {
+                ticketSummary = `1 Family (2+2)`;
+                if (children > 2) {
+                    ticketSummary += ` + ${children-2} Children`;
+                }
+            } else {
+                if (adults > 0) ticketSummary += `${adults} Adult${adults > 1 ? 's' : ''}`;
+                if (children > 0) {
+                    if (adults > 0) ticketSummary += ' + ';
+                    ticketSummary += `${children} Child${children > 1 ? 'ren' : ''}`;
+                }
+            }
+            
+            document.getElementById('ticketSummary').textContent = ticketSummary || 'None';
+            document.getElementById('subtotal').textContent = `£${subtotal.toFixed(2)}`;
+            document.getElementById('discount').textContent = `-£${discount.toFixed(2)}`;
+            document.getElementById('total').textContent = `£${total.toFixed(2)}`;
+        }
+        
+        function addExperience(experience) {
+            alert('Experience added to your booking! You can review this during checkout.');
+            // In a real implementation, this would add to a cart system
+        }
+        
+        function submitBooking() {
+            const visitDate = document.getElementById('visitDate').value;
+            const email = document.getElementById('email').value;
+            const terms = document.getElementById('terms').checked;
+            
+            if (!visitDate || !email) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            if (!terms) {
+                alert('Please agree to the Terms & Conditions');
+                return;
+            }
+            
+            // In a real implementation, this would submit to a server
+            alert(`Thank you for your booking!\nA confirmation has been sent to ${email}\n\nYou will be redirected to our secure payment page.`);
+            
+            // Here you would typically redirect to a payment gateway
+            // window.location.href = "/checkout";
+        }
+        
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+    </script>
+</body>
+</html>
